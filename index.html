@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content & SEO Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe UI:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        // Optional: Customizing Tailwind theme to match Material Design 3 colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0074d9', // M3 Blue
+                        'on-primary': '#FFFFFF',
+                        'primary-container': '#EADDFF',
+                        'on-primary-container': '#21005D',
+                        surface: '#0084d911',
+                        'on-surface': '#1C1B1F',
+                        'surface-variant': '#0010011',
+                        'on-surface-variant': '#49454F',
+                        outline: '#79747E',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-surface text-on-surface font-sans antialiased">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <h1 class="text-3xl font-bold text-on-surface mb-6">Content & SEO Analyzer</h1>
+
+        <div class="border-b border-outline">
+            <nav class="flex -mb-px space-x-6" aria-label="Tabs">
+                <button class="tab active text-primary border-b-2 border-primary whitespace-nowrap py-4 px-1 text-sm font-medium" onclick="switchTab(event, 'core-analysis')">
+                    Core Analysis
+                </button>
+                <button class="tab text-on-surface-variant border-b-2 border-transparent hover:text-on-surface hover:border-gray-300 whitespace-nowrap py-4 px-1 text-sm font-medium" onclick="switchTab(event, 'seo-analysis')">
+                    SEO Analysis
+                </button>
+            </nav>
+        </div>
+
+        <div id="core-analysis" class="tab-content py-6">
+            <h2 class="text-xl font-semibold text-on-surface mb-4">Content Analyzer</h2>
+            <textarea id="content-input" class="w-full h-48 p-3 bg-surface-variant/30 border border-outline rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150" placeholder="Paste your content here..."></textarea>
+            <button onclick="analyzeContent()" class="mt-4 px-6 py-2.5 bg-primary text-on-primary font-medium text-sm leading-tight uppercase rounded-full shadow-md hover:bg-primary/90 hover:shadow-lg focus:bg-primary/90 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary/80 active:shadow-lg transition duration-150 ease-in-out">
+                Analyze Content
+            </button>
+
+            <div id="analysis-results" class="mt-8 p-6 border border-outline rounded-xl bg-surface-variant/20">
+                <h3 class="text-lg font-medium text-on-surface mb-4">Analysis Results</h3>
+                <div class="space-y-3 text-on-surface-variant">
+                    <p id="word-count"><strong>Word Count:</strong> 0</p>
+                    <p id="readability-score"><strong>Readability:</strong> N/A</p>
+                    <p id="keyword-density"><strong>Top Keywords:</strong> N/A</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="seo-analysis" class="tab-content hidden py-6">
+            <h2 class="text-xl font-semibold text-on-surface mb-4">SEO Content Analyzer</h2>
+            <textarea id="seo-content" class="w-full h-48 p-3 bg-surface-variant/30 border border-outline rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-150" placeholder="Paste your page's full HTML content here..."></textarea>
+            <button onclick="analyzeSEO()" class="mt-4 px-6 py-2.5 bg-primary text-on-primary font-medium text-sm leading-tight uppercase rounded-full shadow-md hover:bg-primary/90 hover:shadow-lg focus:bg-primary/90 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary/80 active:shadow-lg transition duration-150 ease-in-out">
+                Analyze SEO
+            </button>
+
+            <div id="seo-results" class="mt-8 p-6 border border-outline rounded-xl bg-surface-variant/20">
+                <h3 class="text-lg font-medium text-on-surface mb-4">SEO Analysis Results</h3>
+                <div class="space-y-3 text-on-surface-variant">
+                    <p id="meta-description"><strong>Meta Description:</strong> N/A</p>
+                    <p id="heading-structure"><strong>Heading Structure:</strong> N/A</p>
+                    <p id="seo-keyword-density"><strong>Top Keywords:</strong> N/A</p>
+                    <p id="link-count"><strong>Internal Links:</strong> 0 | <strong>External Links:</strong> 0</p>
+                    <p id="alt-tag-check"><strong>Images Missing Alt Tags:</strong> 0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching Function
+        function switchTab(event, tabId) {
+            // Deactivate all tabs
+            document.querySelectorAll(".tab").forEach(tab => {
+                tab.classList.remove("active", "text-primary", "border-primary");
+                tab.classList.add("text-on-surface-variant", "border-transparent");
+            });
+
+            // Hide all content
+            document.querySelectorAll(".tab-content").forEach(content => {
+                content.classList.add("hidden");
+            });
+
+            // Activate the clicked tab
+            event.currentTarget.classList.add("active", "text-primary", "border-primary");
+            event.currentTarget.classList.remove("text-on-surface-variant", "border-transparent");
+
+            // Show the corresponding content
+            document.getElementById(tabId).classList.remove("hidden");
+        }
+
+        // --- CORE ANALYSIS FUNCTION (No changes needed) ---
+        function analyzeContent() {
+            const text = document.getElementById("content-input").value;
+
+            // Word Count
+            const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+            document.getElementById("word-count").innerHTML = `<strong>Word Count:</strong> ${wordCount}`;
+
+            // Readability Score
+            const sentenceCount = text.split(/[.!?]/).filter(s => s.trim().length > 0).length || 1;
+            const avgWordsPerSentence = wordCount / sentenceCount;
+            const readability = avgWordsPerSentence > 20 ? "Difficult" : avgWordsPerSentence > 15 ? "Moderate" : "Easy";
+            document.getElementById("readability-score").innerHTML = `<strong>Readability:</strong> ${readability} (Avg. ${avgWordsPerSentence.toFixed(1)} words/sentence)`;
+
+            // Keyword Density
+            const words = text.toLowerCase().match(/\b(\w+)\b/g) || [];
+            const wordFreq = {};
+            words.forEach(word => wordFreq[word] = (wordFreq[word] || 0) + 1);
+            const mostCommon = Object.entries(wordFreq).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            document.getElementById("keyword-density").innerHTML = `<strong>Top Keywords:</strong> ${mostCommon.map(k => `${k[0]} (${k[1]})`).join(", ") || "N/A"}`;
+        }
+
+        // --- SEO ANALYSIS FUNCTION (No changes needed) ---
+        function analyzeSEO() {
+            const html = document.getElementById("seo-content").value;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Meta Description
+            const metaDesc = doc.querySelector("meta[name='description']");
+            const metaDescText = metaDesc ? metaDesc.getAttribute("content") : "Not Found";
+            document.getElementById("meta-description").innerHTML = `<strong>Meta Description:</strong> ${metaDescText.length > 160 ? `<span class="text-red-500">${metaDescText.length} characters (Too long)</span>` : `<span class="text-green-600">${metaDescText.length} characters</span>`}`;
+
+            // Heading Structure
+            const headings = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
+            const headingSummary = Array.from(headings).map(h => h.tagName).join(" → ");
+            document.getElementById("heading-structure").innerHTML = `<strong>Heading Structure:</strong> ${headingSummary || "None Found"}`;
+
+            // Keyword Density
+            const textContent = doc.body.textContent || "";
+            const words = textContent.toLowerCase().match(/\b(\w+)\b/g) || [];
+            const wordFreq = {};
+            words.forEach(word => wordFreq[word] = (wordFreq[word] || 0) + 1);
+            const mostCommon = Object.entries(wordFreq).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            document.getElementById("seo-keyword-density").innerHTML = `<strong>Top Keywords:</strong> ${mostCommon.map(k => `${k[0]} (${k[1]})`).join(", ") || "N/A"}`;
+
+            // Internal & External Links
+            const links = doc.querySelectorAll("a[href]");
+            let internalLinks = 0, externalLinks = 0;
+            const currentHostname = "example.com"; // Use a placeholder or extract dynamically
+            links.forEach(link => {
+                try {
+                    const linkHostname = new URL(link.href).hostname;
+                    if (linkHostname.includes(currentHostname)) {
+                        internalLinks++;
+                    } else {
+                        externalLinks++;
+                    }
+                } catch (e) {
+                    // Handles relative links like /about-us
+                    internalLinks++;
+                }
+            });
+            document.getElementById("link-count").innerHTML = `<strong>Internal Links:</strong> ${internalLinks} | <strong>External Links:</strong> ${externalLinks}`;
+
+            // Alt Tags for Images
+            const images = doc.querySelectorAll("img");
+            let missingAlt = 0;
+            images.forEach(img => {
+                if (!img.hasAttribute("alt") || img.getAttribute("alt").trim() === "") {
+                    missingAlt++;
+                }
+            });
+            document.getElementById("alt-tag-check").innerHTML = `<strong>Images Missing Alt Tags:</strong> ${missingAlt > 0 ? `<span class="text-red-500">${missingAlt}</span>` : `<span class="text-green-600">${missingAlt}</span>`}`;
+        }
+    </script>
+
+</body>
+</html>

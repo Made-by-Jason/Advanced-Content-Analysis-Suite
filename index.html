@@ -88,7 +88,13 @@
     </div>
 
     <script>
-        // Tab Switching Function
+        /**
+         * Handles switching between the 'Core Analysis' and 'SEO Analysis' tabs.
+         * Deactivates all tabs and hides all tab content, then activates the selected tab and shows its content.
+         * @param {Event} event - The click event that triggered the tab switch.
+         * @param {string} tabId - The ID of the tab content element to display.
+         * @returns {void}
+         */
         function switchTab(event, tabId) {
             // Deactivate all tabs
             document.querySelectorAll(".tab").forEach(tab => {
@@ -109,7 +115,12 @@
             document.getElementById(tabId).classList.remove("hidden");
         }
 
-        // --- CORE ANALYSIS FUNCTION (No changes needed) ---
+        /**
+         * Analyzes the text from the 'content-input' textarea for basic metrics.
+         * It calculates the word count, a simple readability score, and the top three most frequent keywords.
+         * The results are then displayed in the 'analysis-results' section of the page.
+         * @returns {void}
+         */
         function analyzeContent() {
             const text = document.getElementById("content-input").value;
 
@@ -131,7 +142,13 @@
             document.getElementById("keyword-density").innerHTML = `<strong>Top Keywords:</strong> ${mostCommon.map(k => `${k[0]} (${k[1]})`).join(", ") || "N/A"}`;
         }
 
-        // --- SEO ANALYSIS FUNCTION (No changes needed) ---
+        /**
+         * Analyzes the HTML content from the 'seo-content' textarea for on-page SEO metrics.
+         * It checks for a meta description, analyzes the heading structure (H1-H6 tags),
+         * calculates keyword density from the body text, counts internal and external links,
+         * and checks for missing alt tags on images. The results are displayed in the 'seo-results' section.
+         * @returns {void}
+         */
         function analyzeSEO() {
             const html = document.getElementById("seo-content").value;
             const parser = new DOMParser();
